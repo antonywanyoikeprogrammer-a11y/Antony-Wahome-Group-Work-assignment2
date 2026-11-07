@@ -1,0 +1,86 @@
+#mathematical function and vectorization
+#vectorization means performing a mathematical operation on many 
+#value at once instead of using a loop to proces each value
+
+#Examle of  calculate the sine  of  every number
+
+
+import numpy as np
+x=np.array([0, np.pi/2,np.pi])
+result=np.sin(x)
+print(result)
+
+
+#understanding the mathematical concept
+#y=sin**2(x)+cos**2(x)
+#in mathematic we now that sin**2(2)+cos**2(x)=1
+
+
+import numpy as np
+x=np.array([0,np.pi/2,np.pi])
+y=np.sin(x)**2+np.cos(x)**2
+print(y)
+
+ 
+# simple one
+#squaring a number
+import numpy as np
+x=np.array([1,2,3,4,5,6,7,8,9])
+y=x**2
+print("First five readings:",y[:5])
+print(y)
+
+#in real world version is calculatin the marks of student doing
+#computer science in mount kenya university
+import numpy as np
+
+
+#students who does computer science
+names=np.array(["Amina", "Ali", "Ifrah","Fatma", "Grace"])
+#marks for five units
+marks=np.array([40,60,50,80,70,
+                79,56,78,50,66,
+                60,70,70,60,80,
+                40,50,50,60,70,
+                70,50,70,80,40
+                ])
+#calculate ech student mean mark
+mean_marks=np.mean(marks,)
+
+for i in range(len(names)):
+   if mean_marks[i]>=70:
+       grade ="A"
+       if mean_marks[i] >= 60:
+          grade = "B"
+if mean_marks[i]>=50:
+    grade="C"
+if mean_marks[i]>=40:
+    grade="D"
+else:
+    grade="E"
+
+print("student:", name[i]),
+print("unit marks:", marks[i]),
+print("mean mark:", mean_marks[i]),
+print("mean grade:", grade),
+print()
+
+
+
+import matplotlib.pyplot as plt
+plt.plot(df['year'], df['percent'])
+plt.axhline(50, color='gray', linestyle='--')
+plt.xlabel('Year')
+plt.ylabel('Percent Connected')
+
+
+import matplotlib.pyplot as plt
+
+students = ["Ali", "Amina", "Hassan", "Fatima"]
+marks = [70, 85, 60, 90]
+
+plt.bar(students, marks)
+plt.xlabel("Students")
+plt.ylabel("Marks")
+plt.title("Students' Marks")
+plt.show()
