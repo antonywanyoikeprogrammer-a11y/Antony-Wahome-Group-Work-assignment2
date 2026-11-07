@@ -1,0 +1,28 @@
+#Root-finding methods
+#Floating-point iteration method
+import numpy as np
+
+P = 100000
+A = 10000
+n = 12
+
+k = A / P
+
+def g(r):
+    return k * (1 - 1 / (1 + r)**n)
+
+r = 0.05
+history = [r]
+
+for _ in range(200):
+    r_new = g(r)
+    history.append(r_new)
+
+    if abs(r_new - r) < 1e-10:
+        break
+
+    r = r_new
+
+print("Fixed-point monthly interest rate:", r_new)
+print("Interest rate (%):", r_new * 100)
+print("Iterations:", len(history) - 1)
