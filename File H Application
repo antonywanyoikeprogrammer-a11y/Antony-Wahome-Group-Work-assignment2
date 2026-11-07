@@ -1,0 +1,61 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. Create the adjacency matrix
+# 1 means two computers are connected
+# 0 means they are not directly connected
+
+A = np.array([
+    [0, 1, 1, 0],
+    [1, 0, 1, 1],
+    [1, 1, 0, 1],
+    [0, 1, 1, 0]
+], dtype=float)
+
+# 2. Give each computer a name
+computers = ["Computer A", "Computer B",
+             "Computer C", "Computer D"]
+
+# 3. Calculate eigenvalues and eigenvectors
+eigenvalues, eigenvectors = np.linalg.eig(A)
+
+# 4. Find the index of the largest eigenvalue
+index = np.argmax(np.real(eigenvalues))
+
+# 5. Extract the dominant eigenvalue
+dominant_eigenvalue = np.real(eigenvalues[index])
+
+# 6. Extract the corresponding eigenvector
+dominant_vector = np.abs(
+    np.real(eigenvectors[:, index])
+)
+
+# 7. Normalize the eigenvector to obtain importance scores
+importance = dominant_vector / dominant_vector.sum()
+
+# 8. Display the results
+print("E-COMMERCE COMPANY NETWORK ANALYSIS")
+print("-----------------------------------")
+
+print("Dominant eigenvalue:",
+      round(dominant_eigenvalue, 4))
+
+print("\nComputer importance scores:")
+
+for computer, score in zip(computers, importance):
+    print(f"{computer}: {score:.4f}")
+
+# 9. Identify the most important computer
+most_important_index = np.argmax(importance)
+
+print("\nMost structurally important computer:",
+      computers[most_important_index])
+
+# 10. Display the importance scores using a graph
+plt.bar(computers, importance)
+
+plt.xlabel("Computer Systems")
+plt.ylabel("Importance Score")
+plt.title("Importance of Computers in an E-commerce Network")
+
+plt.show()
