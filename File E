@@ -1,0 +1,80 @@
+# Matrix Algebra and Matrix Operations 
+
+
+import numpy as np
+
+# x = number of Type A servers
+# y = number of Type B servers
+
+# Type A uses 4 CPU units and 8 GB memory
+# Type B uses 2 CPU units and 12 GB memory
+
+# Total observed usage:
+# 20 CPU units and 72 GB memory
+
+A = np.array([
+    [4.0, 2.0],
+    [8.0, 12.0]
+])
+
+b = np.array([20.0, 72.0])
+
+# Solve the system of equations
+solution = np.linalg.solve(A, b)
+
+# Calculate residual
+residual = b - A @ solution
+
+# Display results
+print(f"Type A servers: {solution[0]:.0f}")
+print(f"Type B servers: {solution[1]:.0f}")
+
+print("Verification A @ solution:", A @ solution)
+
+print("Residual:", residual)
+
+print("Residual norm:", np.linalg.norm(residual))
+
+
+
+
+
+#Real-world Example : Electrical Circuit Analysis
+
+
+import numpy as np
+
+# Unknown currents
+# I1 = Current in branch 1
+# I2 = Current in branch 2
+
+# Coefficient matrix
+A = np.array([
+    [10.0, 2.0],
+    [2.0, 8.0]
+])
+
+# Known voltage values
+b = np.array([24.0, 20.0])
+
+# Solve the simultaneous equations
+solution = np.linalg.solve(A, b)
+
+# Extract the currents
+I1 = solution[0]
+I2 = solution[1]
+
+# Verify the solution
+verification = A @ solution
+
+# Calculate residual
+residual = b - verification
+
+# Display results
+print("ELECTRICAL CIRCUIT ANALYSIS")
+
+print(f"Current in branch 1: {I1:.2f} A")
+print(f"Current in branch 2: {I2:.2f} A")
+
+print("Verification:", verification)
+print("Residual:", residual)
