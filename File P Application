@@ -1,0 +1,58 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Physical Constants & Parameters
+g = 9.81  # Acceleration due to gravity (m/s^2)
+m = 80.0  # Mass of the skydiver (kg)
+c = 0.25  # Drag coefficient (kg/m)
+v_initial = 0.0  # Starting from rest (m/s)
+
+# Simulation Setup
+h = 0.5  # Time step (seconds)
+end_time = 20.0  # Total simulation time (seconds)
+
+
+def acceleration(v):
+    """Calculates instantaneous acceleration: dv/dt = g - (c/m)*v^2."""
+    return g - (c / m) * (v**2)
+
+
+# Initialize arrays
+time = np.arange(0, end_time + h, h)
+velocity_euler = np.zeros_like(time)
+velocity_euler[0] = v_initial
+
+# Euler's Method Loop
+for i in range(len(time) - 1):
+    velocity_euler[i + 1] = velocity_euler[i] + h * acceleration(
+        velocity_euler[i]
+    )
+
+# Exact Analytical Solution for Validation
+# v(t) = sqrt(m*g/c) * tanh(sqrt(g*c/m) * t)
+v_terminal = np.sqrt((m * g) / c)
+exact_velocity = v_terminal * np.tanh(np.sqrt((g * c) / m) * time)
+
+# Output final comparison metrics
+print(f"Terminal velocity limit: {v_terminal:.2f} m/s")
+print(f"Euler velocity after {end_time}s: {velocity_euler[-1]:.2f} m/s")
+print(f"Exact velocity after {end_time}s: {exact_velocity[-1]:.2f} m/s")
+print(f"Final absolute error: {abs(velocity_euler[-1] - exact_velocity[-1]):.4f} m/s")
+
+# Plotting the Results
+plt.figure(figsize=(8, 5))
+plt.plot(time, velocity_euler, marker="o", color="crimson", label="Euler Method")
+plt.plot(time, exact_velocity, linestyle="--", color="navy", label="Exact Solution")
+plt.axhline(
+    y=v_terminal,
+    color="gray",
+    linestyle=":",
+    label=f"Terminal Velocity ({v_terminal:.1f} m/s)",
+)
+
+plt.xlabel("Time (seconds)")
+plt.ylabel("Velocity (m/s)")
+plt.title("Skydiver Velocity Over Time (Air Resistance)")
+plt.legend()
+plt.grid(True)
+plt.show()
