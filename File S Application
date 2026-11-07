@@ -1,0 +1,83 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. Create a random-number generator
+rng = np.random.default_rng(42)
+
+# 2. Define the server properties
+capacity = 1000
+mean_demand = 850
+std_demand = 120
+
+# 3. Set the number of simulations
+N = 100_000
+
+# 4. Generate random incoming requests per second
+demand = rng.normal(mean_demand, std_demand, N)
+
+# Demand cannot be negative
+demand = np.maximum(demand, 0)
+
+# 5. Identify scenarios that overload the server
+overloaded = demand > capacity
+
+# 6. Estimate the overload probability
+overload_count = overloaded.sum()
+overload_probability = overload_count / N
+
+print("ECOMMERCE SERVER RISK ANALYSIS")
+print("--------------------------------")
+print(f"Server capacity: {capacity} requests/second")
+print(f"Average demand: {mean_demand} requests/second")
+print(f"Simulations performed: {N:,}")
+print(f"Overload cases: {overload_count:,}")
+print(f"Estimated overload probability: "
+      f"{overload_probability:.2%}")
+
+# 7. Calculate an approximate 95% confidence interval
+standard_error = np.sqrt(
+    overload_probability * (1 - overload_probability) / N
+)
+
+lower_bound = max(
+    0, overload_probability - 1.96 * standard_error
+)
+upper_bound = min(
+    1, overload_probability + 1.96 * standard_error
+)
+
+print(f"Approximate 95% confidence interval: "
+      f"{lower_bound:.2%} to {upper_bound:.2%}")
+
+# 8. Calculate the running probability estimate
+running_probability = (
+    np.cumsum(overloaded) / np.arange(1, N + 1)
+)
+
+# Select points for a clearer graph
+indices = np.unique(
+    np.logspace(1, np.log10(N), 200).astype(int)
+) - 1
+
+# 9. Plot convergence
+plt.figure(figsize=(10, 5))
+
+plt.semilogx(
+    indices + 1,
+    running_probability[indices],
+    label="Estimated overload probability"
+)
+
+plt.axhline(
+    overload_probability,
+    linestyle="--",
+    label="Final estimate"
+)
+
+plt.xlabel("Number of simulations")
+plt.ylabel("Overload probability")
+plt.title("Monte Carlo Simulation: E-commerce Server Risk")
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
