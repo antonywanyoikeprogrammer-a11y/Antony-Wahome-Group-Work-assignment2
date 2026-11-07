@@ -1,0 +1,119 @@
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Initial temperature estimates
+T_initial = np.zeros(5)
+
+# Boundary temperatures
+left = 100
+right = 20
+
+# Accuracy requirements
+tolerance = 0.000001
+max_iterations = 100
+
+# -----------------------------
+# 1. JACOBI METHOD
+# -----------------------------
+
+def jacobi_method():
+
+    T = T_initial.copy()
+    errors = []
+
+    for iteration in range(max_iterations):
+
+        # Store the previous temperature estimates
+        old_T = T.copy()
+
+        # Calculate new temperatures
+        new_T = np.zeros(5)
+
+        new_T[0] = (left + old_T[1]) / 2
+        new_T[1] = (old_T[0] + old_T[2]) / 2
+        new_T[2] = (old_T[1] + old_T[3]) / 2
+        new_T[3] = (old_T[2] + old_T[4]) / 2
+        new_T[4] = (old_T[3] + right) / 2
+
+        # Calculate maximum error
+        error = np.max(np.abs(new_T - old_T))
+
+        errors.append(error)
+
+        # Check convergence
+        if error < tolerance:
+            return new_T, errors
+
+        T = new_T.copy()
+
+    return T, errors
+
+# -----------------------------
+# 2. GAUSS-SEIDEL METHOD
+# -----------------------------
+
+def gauss_seidel_method():
+
+    T = T_initial.copy()
+    errors = []
+    for iteration in range(max_iterations):
+     old_T = T.copy()
+
+        # Update temperatures one by one
+        T[0] = (left + T[1]) / 2
+        T[1] = (T[0] + T[2]) / 2
+        T[2] = (T[1] + T[3]) / 2
+        T[3] = (T[2] + T[4]) / 2
+        T[4] = (T[3] + right) / 2
+
+        # Calculate maximum error
+        error = np.max(np.abs(T - old_T))
+
+        errors.append(error)
+
+        # Check convergence
+        if error < tolerance:
+            return T, errors
+
+    return T, errors
+
+# -----------------------------
+# 3. EXECUTE BOTH METHODS
+# -----------------------------
+
+jacobi_result, jacobi_errors = jacobi_method()
+gs_result, gs_errors = gauss_seidel_method()
+
+# -----------------------------
+# 4. DISPLAY RESULTS
+# -----------------------------
+
+print("JACOBI METHOD RESULTS")
+
+for i, temperature in enumerate(jacobi_result):
+    print(f"Point {i+1}: {temperature:.6f} °C")
+
+print("\nGAUSS-SEIDEL METHOD RESULTS")
+
+for i, temperature in enumerate(gs_result):
+    print(f"Point {i+1}: {temperature:.6f} °C")
+
+print("\nNumber of Jacobi iterations:",
+      len(jacobi_errors))
+
+print("Number of Gauss-Seidel iterations:",
+      len(gs_errors))
+
+# -----------------------------
+# 5. PLOT CONVERGENCE
+# -----------------------------
+
+plt.semilogy(jacobi_errors, label="Jacobi")
+plt.semilogy(gs_errors, label="Gauss-Seidel")
+plt.xlabel("Number of iterations"
+plt.ylabel("Maximum error")
+plt.title("Jacobi vs Gauss-Seidel Convergence")
+plt.legend()
+plt.grid(True)
+plt.show()
