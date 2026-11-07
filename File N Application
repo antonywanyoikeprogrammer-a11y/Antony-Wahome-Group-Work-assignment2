@@ -1,0 +1,57 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Time readings from the temperature sensor (seconds)
+time = np.array([0, 1, 2, 3, 4, 5, 6], dtype=float)
+
+# Temperature readings from the sensor (degrees Celsius)
+temperature = np.array([25.0, 25.4, 26.0, 27.0, 28.5, 30.5, 33.0])
+
+# Create an array to store the rate of temperature change
+rate = np.zeros_like(temperature)
+
+# Forward difference at the first reading
+rate[0] = (
+    temperature[1] - temperature[0]
+) / (
+    time[1] - time[0]
+)
+
+# Central difference for interior readings
+for i in range(1, len(time) - 1):
+    rate[i] = (
+        temperature[i + 1] - temperature[i - 1]
+    ) / (
+        time[i + 1] - time[i - 1]
+    )
+
+# Backward difference at the last reading
+rate[-1] = (
+    temperature[-1] - temperature[-2]
+) / (
+    time[-1] - time[-2]
+)
+
+# Display temperature and its rate of change
+for t, temp, change in zip(time, temperature, rate):
+    print(
+        f"Time={t:.0f}s, "
+        f"Temperature={temp:.1f}°C, "
+        f"Rate={change:.2f}°C/s"
+    )
+
+# Plot temperature against time
+plt.plot(time, temperature, marker="o")
+plt.xlabel("Time (seconds)")
+plt.ylabel("Temperature (°C)")
+plt.title("Server Room Temperature Readings")
+plt.grid(True)
+plt.show()
+
+# Plot the rate of temperature change
+plt.plot(time, rate, marker="o")
+plt.xlabel("Time (seconds)")
+plt.ylabel("Rate of change (°C/s)")
+plt.title("Temperature Sensor Sensitivity to Time")
+plt.grid(True)
+plt.show()
