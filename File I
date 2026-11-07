@@ -1,0 +1,22 @@
+#Root-finding methods
+#bisection method
+
+import numpy as np
+from scipy.optimize import root_scalar
+
+P = 100000       # Loan amount
+A = 10000        # Monthly payment
+n = 12           # Number of payments
+
+def loan_balance(r):
+    return P * (r * (1 + r)**n) / ((1 + r)**n - 1) - A
+
+solution = root_scalar(
+    loan_balance,
+    bracket=[0.02, 0.04],
+    method="bisect",
+    xtol=1e-10
+)
+
+print("Monthly interest rate:", solution.root)
+print("Monthly interest rate (%):", solution.root * 100)
