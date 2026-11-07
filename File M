@@ -1,0 +1,156 @@
+#  Curve Fitting and Approximation
+
+
+import numpy as np
+from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
+
+# Concurrent users and measured server response time
+# Response time is measured in milliseconds
+
+users = np.array(
+    [50, 100, 150, 200, 250, 300, 350],
+    dtype=float
+)
+
+response_ms = np.array(
+    [82, 95, 115, 145, 185, 238, 305],
+    dtype=float
+)
+
+# Define a quadratic mathematical model
+def model(x, a, b, c):
+    return a*x**2 + b*x + c
+
+# Fit the model to the collected data
+parameters, covariance = curve_fit(
+    model, users, response_ms
+)
+
+# Extract the fitted parameters
+a, b, c = parameters
+
+# Calculate predicted response times
+predicted = model(users, a, b, c)
+
+# Calculate Root Mean Square Error (RMSE)
+rmse = np.sqrt(
+    np.mean((response_ms - predicted)**2)
+)
+
+# Display the results
+print(f"Fitted model: y = {a:.6f}x^2 + {b:.4f}x + {c:.2f}")
+
+print(f"RMSE: {rmse:.2f} ms")
+
+# Predict response time at 400 users
+print(
+    f"Predicted response at 400 users: "
+    f"{model(400, a, b, c):.2f} ms"
+)
+
+# Generate points for the fitted curve
+x_plot = np.linspace(users.min(), 400, 300)
+
+# Plot actual measurements
+plt.scatter(
+    users,
+    response_ms,
+    label="Measurements"
+)
+
+# Plot fitted curve
+plt.plot(
+    x_plot,
+    model(x_plot, a, b, c),
+    label="Fitted curve"
+)
+
+plt.xlabel("Concurrent users")
+plt.ylabel("Response time (ms)")
+plt.title("Server response-time curve fitting")
+
+plt.legend()
+plt.grid(True)
+
+plt.show()
+
+
+
+
+
+
+#  Real-world Example : Population Growth Prediction
+
+
+import numpy as np
+from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
+
+# Population data
+# Years are measured from 2020
+
+years = np.array([0, 1, 2, 3, 4, 5], dtype=float)
+
+population = np.array([
+    10000, 11200, 12600,
+    14100, 15800, 17700
+], dtype=float)
+
+# Define quadratic model
+def model(x, a, b, c):
+    return a*x**2 + b*x + c
+
+# Fit the model to population data
+parameters, covariance = curve_fit(
+    model, years, population
+)
+
+# Extract parameters
+a, b, c = parameters
+
+# Calculate predicted population
+predicted = model(years, a, b, c)
+
+# Calculate RMSE
+rmse = np.sqrt(
+    np.mean((population - predicted)**2)
+)
+
+# Predict population in 2026
+year_2026 = 6
+
+future_population = model(year_2026, a, b, c)
+
+# Display results
+print("POPULATION GROWTH PREDICTION")
+
+print(f"Fitted model: y = {a:.2f}x^2 + {b:.2f}x + {c:.2f}")
+
+print(f"RMSE: {rmse:.2f}")
+
+print(f"Predicted population in 2026: {future_population:.0f}")
+
+# Generate points for graph
+x_plot = np.linspace(0, 6, 100)
+
+# Plot actual population
+plt.scatter(
+    years, population,
+    label="Actual population"
+)
+
+# Plot fitted curve
+plt.plot(
+    x_plot, model(x_plot, a, b, c),
+    label="Fitted population curve"
+)
+
+plt.xlabel("Years since 2020")
+plt.ylabel("Population")
+plt.title("Population Growth Prediction")
+
+plt.legend()
+plt.grid(True)
+
+plt.show()
